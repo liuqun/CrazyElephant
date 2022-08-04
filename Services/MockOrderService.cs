@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace MyApp
+namespace MyApp.Services
 {
     public class MockOrderService : IOrderService
     {

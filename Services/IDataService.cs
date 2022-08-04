@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MyApp
+namespace MyApp.Services
 {
     public interface IDataService
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 
-namespace MyApp
+namespace MyApp.Services
 {
     public class XmlDataService : IDataService
     {
