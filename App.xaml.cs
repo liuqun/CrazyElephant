@@ -1,11 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MyApp.Services;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace MyApp
@@ -22,7 +17,9 @@ namespace MyApp
 
         public App()
         {
-            ServiceProvider = ConfigureServices();
+            IServiceCollection services = CollectAllServices();
+
+            ServiceProvider = services.BuildServiceProvider();
         }
 
         /// <summary>
@@ -30,22 +27,18 @@ namespace MyApp
         /// </summary>
         public static new App Current => (App)Application.Current;
 
-        private static IServiceProvider ConfigureServices()
+        private static IServiceCollection CollectAllServices()
         {
-            IServiceCollection services = new ServiceCollection();
-
-            ServiceProvider provider =
-                services.AddSingleton<MainWindow>()
-                .AddSingleton<MainWindowViewModel>()
+            return new ServiceCollection()
                 .AddSingleton<IDataService, XmlDataService>()
                 .AddSingleton<IOrderService, MockOrderService>()
-                .BuildServiceProvider();
-            return provider;
+                .AddSingleton<MainWindow>()
+                .AddSingleton<MainWindowViewModel>();
         }
 
         protected override void OnStartup(StartupEventArgs args)
         {
-            MainWindow wnd= ServiceProvider.GetRequiredService<MainWindow>();
+            MainWindow wnd = ServiceProvider.GetRequiredService<MainWindow>();
             wnd.Show();
             base.OnStartup(args);
         }
