@@ -2,7 +2,7 @@
 
 namespace MyApp
 {
-    interface IDataService
+    public interface IDataService
     {
         List<Dish> FindAllDishes();
     }

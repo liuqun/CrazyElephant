@@ -2,7 +2,7 @@
 
 namespace MyApp
 {
-    interface IOrderService
+    public interface IOrderService
     {
         void PlaceOrder(List<string> ordered);
     }

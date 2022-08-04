@@ -3,9 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:MyApp"
         mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
         Title="MainWindow" Height="600" Width="750">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Shadows.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <!--<Border BorderThickness="3" CornerRadius="6">-->
     <Border BorderBrush="Pink" BorderThickness="3" CornerRadius="6" Background="MistyRose">
         <Grid x:Name="Root" Margin="4">
             <Grid.RowDefinitions>
@@ -64,41 +77,38 @@
                 <DataGrid.CellStyle>
                     <Style TargetType="DataGridCell" >
                         <Setter Property="BorderThickness" Value="0,1,0,1"/>
-                        <Style.Triggers>
+                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="BorderBrush" Value="White"/>
+                        <Setter Property="Foreground" Value="Black"/>
+                        <!--<Style.Triggers>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter Property="Background" Value="White"/>
                                 <Setter Property="Foreground" Value="Black"/>
                                 <Setter Property="BorderBrush" Value="White"/>
                                 <Setter Property="BorderThickness" Value="0,1,0,1"/>
                             </Trigger>
-                        </Style.Triggers>
+                        </Style.Triggers>-->
                     </Style>
                 </DataGrid.CellStyle>
                 <!-- 数据列 -->
                 <DataGrid.Columns>
                     <!--Check功能，为了达到点一次就能选取上需要使用CellTemplate来实现,数据绑定到MainWindowViewModel类的
-                    DishMenu(List<DishMenuItemViewModel>类型的)属性类的IsSelected属性上-->
-                    <DataGridTemplateColumn Header="份数" SortMemberPath="Selected" Width="120">
+                    DishMenu(List<DishMenuItemViewModel>类型的)属性类的Selected属性上-->
+                    <DataGridTemplateColumn Header="" SortMemberPath="Selected" Width="30">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Button Command="{Binding Path=OrderAddCommand}" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        +
-                                    </Button>
-                                    <TextBlock Text="{Binding Path=NumOrdered}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    <Button Command="{Binding Path=OrderDecCommand}" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        -
-                                    </Button>
-                                    <CheckBox IsChecked="{Binding Path=Selected,  UpdateSourceTrigger=PropertyChanged}"
-                                            VerticalAlignment="Center" HorizontalAlignment="Center"
-                                            Command="{Binding Path=DataContext.SelectMenuItemCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}}" />
-                                </StackPanel>
+                                <CheckBox IsChecked="{Binding Path=Selected, UpdateSourceTrigger=PropertyChanged}"
+                                          VerticalAlignment="Center" HorizontalAlignment="Center"
+                                          Command="{Binding Path=DataContext.SelectMenuItemCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                          />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="序号" Binding="{Binding RowSerialNum}" Width="48" IsReadOnly="True">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
+
+                                <Setter Property="Margin" Value="0,0,4,0"/>
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="TextAlignment" Value="Center"/>
                             </Style>
@@ -117,11 +127,11 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
                                 <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="TextAlignment" Value="Center"/>
+                                <Setter Property="TextAlignment" Value="Left"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="售价" Binding="{Binding Dish.Price}" Width="70" IsReadOnly="True" >
+                    <DataGridTextColumn Header="售价" Binding="{Binding Dish.Price}" Width="80" IsReadOnly="True" >
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -151,13 +161,30 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="数量" SortMemberPath="None" Width="120">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Button HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Content="+" Width="20" Height="20" FontSize="12" Padding="0,0,0,0">
+                                        <Button.Command>
+                                            <Binding Path="OrderAddCommand"/>
+                                        </Button.Command>
+                                    </Button>
+                                    <TextBlock Text="{Binding Path=NumOrdered}" Margin="10,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    <Button Command="{Binding Path=OrderDecCommand}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Content="-" Width="20" Height="20" FontSize="12" Padding="0,0,0,0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
-                <TextBlock Text="共计：" VerticalAlignment="Center" />
-                <!--绑定到当前ViewModel(MainWindowViewModel类)的Count属性上-->
-                <TextBlock TextAlignment="Left" Margin="0 5 0 5" Width="120" Text="{Binding Total}" />
-                <Button Content="Order" Height="24" Width="120" Command="{Binding PlaceOrderCommand}" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="0,0,0,5">
+                <TextBlock Text="总价：" VerticalAlignment="Center"/>
+                <TextBlock TextAlignment="Right" Text="{Binding Total}" MinWidth="50" VerticalAlignment="Center"/>
+                <TextBlock Text="元" TextAlignment="Left" VerticalAlignment="Center" Width="30"/>
+                <Button Content="保存" Height="30" Width="80" Command="{Binding PlaceOrderCommand}" Padding="0"/>
             </StackPanel>
         </Grid>
     </Border>

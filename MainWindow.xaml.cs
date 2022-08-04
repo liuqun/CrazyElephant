@@ -7,10 +7,12 @@ namespace MyApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        protected readonly MainWindowViewModel myDataContext;
+
+        public MainWindow(MainWindowViewModel viewModel)
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
+            DataContext = myDataContext = viewModel;
         }
     }
 }

@@ -3,35 +3,35 @@
   <Dish>
     <Name>培根披萨</Name>
     <Category>披萨类</Category>
-    <Price>38.00</Price>
+    <Price>36.80</Price>
     <Description>很好吃</Description>
     <Score>5</Score>
   </Dish>
   <Dish>
     <Name>土豆泥底披萨</Name>
     <Category>披萨类</Category>
-    <Price>38.00</Price>
+    <Price>38.80</Price>
     <Description>本店特色</Description>
     <Score>4.5</Score>
   </Dish>
   <Dish>
     <Name>烤囊底披萨</Name>
     <Category>披萨类</Category>
-    <Price>38.00</Price>
+    <Price>37.00</Price>
     <Description>本店特色</Description>
     <Score>5</Score>
   </Dish>
   <Dish>
     <Name>水果披萨</Name>
     <Category>披萨类</Category>
-    <Price>38.00</Price>
+    <Price>28.00</Price>
     <Description></Description>
     <Score>4</Score>
   </Dish>
   <Dish>
     <Name>牛肉披萨</Name>
     <Category>披萨类</Category>
-    <Price>38.00</Price>
+    <Price>58.00</Price>
     <Description></Description>
     <Score>5</Score>
   </Dish>
@@ -45,7 +45,7 @@
   <Dish>
     <Name>金枪鱼披萨</Name>
     <Category>披萨类</Category>
-    <Price>38.00</Price>
+    <Price>58.00</Price>
     <Description></Description>
     <Score>5</Score>
   </Dish>

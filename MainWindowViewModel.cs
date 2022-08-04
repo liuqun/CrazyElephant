@@ -9,8 +9,8 @@ namespace MyApp
 {
     public class MainWindowViewModel : ObservableObject
     {
-        private int total = 0;
-        public int Total
+        private string total = "0.00";
+        public string Total
         {
             get => total;
             set => SetProperty(ref total, value);
@@ -32,8 +32,7 @@ namespace MyApp
 
         private void LoadDishMenu()
         {
-            IDataService service = new XmlDataService();
-            List<Dish> dishes = service.FindAllDishes();
+            List<Dish> dishes = dataService.FindAllDishes();
             DishMenu = new List<CustomerOrderItemViewModel>();
             int i = 1;
             foreach (Dish dish in dishes)
@@ -66,7 +65,6 @@ namespace MyApp
         {
             IEnumerable<CustomerOrderItemViewModel> ordered = DishMenu.Where(menuItem => menuItem.Selected);
             List<string> orderedDishNameList = ordered.Select(menuItem => menuItem.Dish.Name).ToList();
-            IOrderService orderService = new MockOrderService();
             orderService.PlaceOrder(orderedDishNameList);
             _ = System.Windows.MessageBox.Show("提示：下单成功！");
         }
@@ -74,22 +72,37 @@ namespace MyApp
         private void SelectMenuItem()
         {
             int cnt = dishMenu.Count(item => item.Selected);
-            Total = cnt;
+            long sum = 0;
+            List<CustomerOrderItemViewModel> ordered = dishMenu.FindAll(item => item.Selected);
+            foreach (CustomerOrderItemViewModel item in ordered)
+            {
+                int n = item.NumOrdered;
+                if (!double.TryParse(item.Dish.Price, out double price))
+                {
+                    continue;
+                }
+                if (price <= 0)
+                {
+                    continue;
+                }
+                int priceInt32 = Convert.ToInt32(price * 100);
+                sum += Convert.ToInt64(priceInt32) * n;
+            }
+            Total = $"{sum / 100}.{sum % 100:D2}";
         }
 
-        //private void OrderAdd()
-        //{
-        //    int cnt = dishMenu.Count(item => item.Selected);
-        //    Total = cnt;
-        //}
+        protected readonly IOrderService orderService;
 
-        public MainWindowViewModel()
+        protected readonly IDataService dataService;
+
+        public MainWindowViewModel(IDataService dataService, IOrderService orderService)
         {
+            this.dataService = dataService;
+            this.orderService = orderService;
             LoadRestaurant();
             LoadDishMenu();
             PlaceOrderCommand = new RelayCommand(new Action(PlaceOrder));
             SelectMenuItemCommand = new RelayCommand(new Action(SelectMenuItem));
-            
         }
     }
 }
