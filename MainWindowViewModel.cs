@@ -10,11 +10,11 @@ namespace MyApp
 {
     public class MainWindowViewModel : ObservableObject
     {
-        private string total = "0.00";
-        public string Total
+        private string totalCost = "0.00";
+        public string TotalCost
         {
-            get => total;
-            set => SetProperty(ref total, value);
+            get => totalCost;
+            set => SetProperty(ref totalCost, value);
         }
 
         private Restaurant restaurant;
@@ -60,7 +60,7 @@ namespace MyApp
 
         public ICommand PlaceOrderCommand { get; private set; }
 
-        public ICommand SelectMenuItemCommand { get; private set; }
+        public ICommand CalcTotalCostCommand { get; private set; }
 
         private void PlaceOrder()
         {
@@ -70,7 +70,7 @@ namespace MyApp
             _ = System.Windows.MessageBox.Show("提示：下单成功！");
         }
 
-        private void SelectMenuItem()
+        private void CalcTotalCost()
         {
             int cnt = dishMenu.Count(item => item.Selected);
             long sum = 0;
@@ -89,7 +89,7 @@ namespace MyApp
                 int priceInt32 = Convert.ToInt32(price * 100);
                 sum += Convert.ToInt64(priceInt32) * n;
             }
-            Total = $"{sum / 100}.{sum % 100:D2}";
+            TotalCost = $"{sum / 100}.{sum % 100:D2}";
         }
 
         protected readonly IOrderService orderService;
@@ -103,7 +103,7 @@ namespace MyApp
             LoadRestaurant();
             LoadDishMenu();
             PlaceOrderCommand = new RelayCommand(new Action(PlaceOrder));
-            SelectMenuItemCommand = new RelayCommand(new Action(SelectMenuItem));
+            CalcTotalCostCommand = new RelayCommand(new Action(CalcTotalCost));
         }
     }
 }
