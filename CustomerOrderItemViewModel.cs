@@ -62,6 +62,31 @@ namespace MyApp
         {
             OrderAddCommand = new RelayCommand(new Action(OrderAdd));
             OrderDecCommand = new RelayCommand(new Action(OrderDecrease));
+            MyCallbackCommand = new RelayCommand(new Action(MyCommand), () => !(Callback is null));
         }
+
+        public ICommand MyCallbackCommand { get; private set; }
+
+        private void MyCommand()
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"Debug: {RowSerialNum}-{Dish.Name} _numOrdered = {_numOrdered}"
+                );
+            if (Callback is null)
+            {
+                return;
+            }
+            Callback();
+        }
+
+        public Action Callback { get; set; }
+
+        private string customerPreferedOpinions;
+        public string CustomerPreferedOpinions
+        {
+            get => customerPreferedOpinions;
+            set => SetProperty(ref customerPreferedOpinions, value);
+        }
+
     }
 }

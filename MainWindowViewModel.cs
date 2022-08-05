@@ -10,7 +10,8 @@ namespace MyApp
 {
     public class MainWindowViewModel : ObservableObject
     {
-        private string totalCost = "0.00";
+        private string totalCost = "-.--";
+
         public string TotalCost
         {
             get => totalCost;
@@ -41,6 +42,7 @@ namespace MyApp
                 CustomerOrderItemViewModel item = new CustomerOrderItemViewModel
                 {
                     Dish = dish,
+                    Callback = CalcTotalCost,
                     RowSerialNum = i
                 };
                 DishMenu.Add(item);
@@ -70,9 +72,8 @@ namespace MyApp
             _ = System.Windows.MessageBox.Show("提示：下单成功！");
         }
 
-        private void CalcTotalCost()
+        private string GetCalculatedTotalCost()
         {
-            int cnt = dishMenu.Count(item => item.Selected);
             long sum = 0;
             List<CustomerOrderItemViewModel> ordered = dishMenu.FindAll(item => item.Selected);
             foreach (CustomerOrderItemViewModel item in ordered)
@@ -89,7 +90,12 @@ namespace MyApp
                 int priceInt32 = Convert.ToInt32(price * 100);
                 sum += Convert.ToInt64(priceInt32) * n;
             }
-            TotalCost = $"{sum / 100}.{sum % 100:D2}";
+            return $"{sum / 100}.{sum % 100:D2}";
+        }
+
+        private void CalcTotalCost()
+        {
+            TotalCost = GetCalculatedTotalCost();
         }
 
         protected readonly IOrderService orderService;
