@@ -34,6 +34,10 @@ namespace MyApp
 
         private void LoadDishMenu()
         {
+            void OnOrderChanged()
+            {
+                TotalCost = CalculatTotalCost();
+            }
             List<Dish> dishes = dataService.FindAllDishes();
             DishMenu = new List<CustomerOrderItemViewModel>();
             int i = 1;
@@ -42,7 +46,7 @@ namespace MyApp
                 CustomerOrderItemViewModel item = new CustomerOrderItemViewModel
                 {
                     Dish = dish,
-                    Callback = CalcTotalCost,
+                    OnOrderChangedCallback = OnOrderChanged,
                     RowSerialNum = i
                 };
                 DishMenu.Add(item);
@@ -62,8 +66,6 @@ namespace MyApp
 
         public ICommand PlaceOrderCommand { get; private set; }
 
-        public ICommand CalcTotalCostCommand { get; private set; }
-
         private void PlaceOrder()
         {
             IEnumerable<CustomerOrderItemViewModel> ordered = DishMenu.Where(menuItem => menuItem.Selected);
@@ -72,7 +74,7 @@ namespace MyApp
             _ = System.Windows.MessageBox.Show("提示：下单成功！");
         }
 
-        private string GetCalculatedTotalCost()
+        private string CalculatTotalCost()
         {
             long sum = 0;
             List<CustomerOrderItemViewModel> ordered = dishMenu.FindAll(item => item.Selected);
@@ -93,11 +95,6 @@ namespace MyApp
             return $"{sum / 100}.{sum % 100:D2}";
         }
 
-        private void CalcTotalCost()
-        {
-            TotalCost = GetCalculatedTotalCost();
-        }
-
         protected readonly IOrderService orderService;
 
         protected readonly IDataService dataService;
@@ -109,7 +106,6 @@ namespace MyApp
             LoadRestaurant();
             LoadDishMenu();
             PlaceOrderCommand = new RelayCommand(new Action(PlaceOrder));
-            CalcTotalCostCommand = new RelayCommand(new Action(CalcTotalCost));
         }
     }
 }

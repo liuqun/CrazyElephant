@@ -28,12 +28,29 @@ namespace MyApp
             }
         }
 
+        /// <summary>
+        ///   回调事件，当客户点餐订单内容发生变化时被触发
+        /// </summary>
+        public Action OnOrderChangedCallback { get; set; }
+
         private int _numOrdered;
 
         public int NumOrdered
         {
             get => _numOrdered;
-            set => SetProperty(ref _numOrdered, value);
+            set
+            {
+                bool orderIsChanged = SetProperty(ref _numOrdered, value);
+                if (!orderIsChanged)
+                {
+                    return;
+                }
+                if (OnOrderChangedCallback is null)
+                {
+                    return;
+                }
+                OnOrderChangedCallback();
+            }
         }
 
         public int RowSerialNum { get; set; }
@@ -62,24 +79,7 @@ namespace MyApp
         {
             OrderAddCommand = new RelayCommand(new Action(OrderAdd));
             OrderDecCommand = new RelayCommand(new Action(OrderDecrease));
-            MyCallbackCommand = new RelayCommand(new Action(MyCommand), () => !(Callback is null));
         }
-
-        public ICommand MyCallbackCommand { get; private set; }
-
-        private void MyCommand()
-        {
-            System.Diagnostics.Debug.WriteLine(
-                $"Debug: {RowSerialNum}-{Dish.Name} _numOrdered = {_numOrdered}"
-                );
-            if (Callback is null)
-            {
-                return;
-            }
-            Callback();
-        }
-
-        public Action Callback { get; set; }
 
         private string customerPreferedOpinions;
         public string CustomerPreferedOpinions
@@ -87,6 +87,5 @@ namespace MyApp
             get => customerPreferedOpinions;
             set => SetProperty(ref customerPreferedOpinions, value);
         }
-
     }
 }
