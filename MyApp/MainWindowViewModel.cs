@@ -69,7 +69,9 @@ namespace MyApp
         private void PlaceOrder()
         {
             IEnumerable<CustomerOrderItemViewModel> ordered = DishMenu.Where(menuItem => menuItem.Selected);
-            List<string> orderedDishNameList = ordered.Select(menuItem => menuItem.Dish.Name).ToList();
+            List<string> orderedDishNameList = ordered.Select(
+                menuItem => $"{menuItem.Dish.Name}\t￥{menuItem.Dish.Price}/份×{menuItem.NumOrdered}份"
+                ).ToList();
             orderService.PlaceOrder(orderedDishNameList);
             _ = System.Windows.MessageBox.Show("提示：下单成功！");
         }
