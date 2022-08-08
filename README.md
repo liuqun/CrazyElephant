@@ -7,6 +7,12 @@
   * https://www.youtube.com/user/waspec/videos
   * https://www.youtube.com/watch?v=w9xoj7xEHHw&list=PLi4wxS2sSmHrJELxY7H6eSDSHY-c0Hnr6&index=7
 
+# 推荐使用的 .NET SDK 版本
+
+1. 推荐使用老版本 .NET Core 3.1 SDK 下载地址：<br>https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/sdk-3.1.421-windows-x64-installer
+
+2. 可选使用 .NET 6.0 SDK 下载地址：<br>https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/sdk-6.0.302-windows-x64-installer
+
 # 代码目录
 1. 源代码目录：[MyApp](./MyApp)
    通过MVVM技术实现CrazyElephant披萨店点餐功能
