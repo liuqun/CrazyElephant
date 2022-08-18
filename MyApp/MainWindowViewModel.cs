@@ -36,7 +36,7 @@ namespace MyApp
         {
             void OnOrderChanged()
             {
-                TotalCost = CalculatTotalCost();
+                TotalCost = CalculateTotalCost();
             }
             List<Dish> dishes = dataService.FindAllDishes();
             DishMenu = new List<CustomerOrderItemViewModel>();
@@ -76,7 +76,7 @@ namespace MyApp
             _ = System.Windows.MessageBox.Show("提示：下单成功！");
         }
 
-        private string CalculatTotalCost()
+        private string CalculateTotalCost()
         {
             long sum = 0;
             List<CustomerOrderItemViewModel> ordered = dishMenu.FindAll(item => item.Selected);
