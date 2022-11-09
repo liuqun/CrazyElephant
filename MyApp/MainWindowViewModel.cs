@@ -36,7 +36,8 @@ namespace MyApp
         {
             void OnOrderChanged()
             {
-                TotalCost = CalculateTotalCost();
+                long money = CalculateTotalCost();
+                TotalCost = $"{money / 100}.{money % 100:D2}";
                 PlaceOrderCommand.NotifyCanExecuteChanged();
             }
             List<Dish> dishes = dataService.FindAllDishes();
@@ -77,7 +78,7 @@ namespace MyApp
             _ = System.Windows.MessageBox.Show("提示：下单成功！");
         }
 
-        private string CalculateTotalCost()
+        private long CalculateTotalCost()
         {
             long sum = 0;
             List<CustomerOrderItemViewModel> ordered = dishMenu.FindAll(item => item.Selected);
@@ -95,7 +96,7 @@ namespace MyApp
                 int priceInt32 = Convert.ToInt32(price * 100);
                 sum += Convert.ToInt64(priceInt32) * n;
             }
-            return $"{sum / 100}.{sum % 100:D2}";
+            return sum;
         }
 
         protected readonly IOrderService orderService;
@@ -108,12 +109,7 @@ namespace MyApp
             this.orderService = orderService;
             LoadRestaurant();
             LoadDishMenu();
-            bool canExecute()
-            {
-                string strTotalCost = CalculateTotalCost();
-                return double.TryParse(strTotalCost, out double numParsed) && numParsed > 0.0;
-            }
-            PlaceOrderCommand = new RelayCommand(PlaceOrder, canExecute);
+            PlaceOrderCommand = new RelayCommand(PlaceOrder, () => CalculateTotalCost() > 0);
         }
     }
 }
