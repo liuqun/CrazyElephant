@@ -197,7 +197,7 @@
                 <TextBlock Text="总价：" VerticalAlignment="Center"/>
                 <TextBlock TextAlignment="Right" Text="{Binding TotalCost}" MinWidth="50" VerticalAlignment="Center"/>
                 <TextBlock Text="元" TextAlignment="Left" VerticalAlignment="Center" Width="30"/>
-                <Button Content="提交订单" Height="30" Width="80" Command="{Binding PlaceOrderCommand}" Padding="0"/>
+                <Button Content="提交订单" Height="30" Width="80" Command="{Binding SubmitCustomerOrderCommand}" Padding="0" Cursor="Hand"/>
             </StackPanel>
         </Grid>
     </Border>

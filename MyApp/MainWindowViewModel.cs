@@ -38,7 +38,7 @@ namespace MyApp
             {
                 long money = CalculateTotalCost();
                 TotalCost = $"{money / 100}.{money % 100:D2}";
-                PlaceOrderCommand.NotifyCanExecuteChanged();
+                SubmitCustomerOrderCommand.NotifyCanExecuteChanged();
             }
             List<Dish> dishes = dataService.FindAllDishes();
             DishMenu = new List<CustomerOrderItemViewModel>();
@@ -66,9 +66,9 @@ namespace MyApp
             };
         }
 
-        public RelayCommand PlaceOrderCommand { get; private set; }
+        public RelayCommand SubmitCustomerOrderCommand { get; private set; }
 
-        private void PlaceOrder()
+        private void SubmitCustomerOrder()
         {
             IEnumerable<CustomerOrderItemViewModel> ordered = DishMenu.Where(menuItem => menuItem.Selected);
             List<string> orderedDishNameList = ordered.Select(
@@ -109,7 +109,7 @@ namespace MyApp
             this.orderService = orderService;
             LoadRestaurant();
             LoadDishMenu();
-            PlaceOrderCommand = new RelayCommand(PlaceOrder, () => CalculateTotalCost() > 0);
+            SubmitCustomerOrderCommand = new RelayCommand(SubmitCustomerOrder, () => CalculateTotalCost() > 0);
         }
     }
 }
