@@ -37,6 +37,7 @@ namespace MyApp
             void OnOrderChanged()
             {
                 TotalCost = CalculateTotalCost();
+                PlaceOrderCommand.NotifyCanExecuteChanged();
             }
             List<Dish> dishes = dataService.FindAllDishes();
             DishMenu = new List<CustomerOrderItemViewModel>();
@@ -64,7 +65,7 @@ namespace MyApp
             };
         }
 
-        public ICommand PlaceOrderCommand { get; private set; }
+        public RelayCommand PlaceOrderCommand { get; private set; }
 
         private void PlaceOrder()
         {
@@ -107,7 +108,12 @@ namespace MyApp
             this.orderService = orderService;
             LoadRestaurant();
             LoadDishMenu();
-            PlaceOrderCommand = new RelayCommand(new Action(PlaceOrder));
+            bool canExecute()
+            {
+                string strTotalCost = CalculateTotalCost();
+                return double.TryParse(strTotalCost, out double numParsed) && numParsed > 0.0;
+            }
+            PlaceOrderCommand = new RelayCommand(PlaceOrder, canExecute);
         }
     }
 }
