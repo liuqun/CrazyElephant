@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using MyApp.Services;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Windows.Input;
 
 namespace MyApp
 {
-    public class MainWindowViewModel : ObservableObject
+    public class MainWindowViewModel : ObservableRecipient
     {
         private string totalCost = "-.--";
 
@@ -34,12 +35,6 @@ namespace MyApp
 
         private void LoadDishMenu()
         {
-            void OnOrderChanged()
-            {
-                long money = CalculateTotalCost();
-                TotalCost = $"{money / 100}.{money % 100:D2}";
-                SubmitCustomerOrderCommand.NotifyCanExecuteChanged();
-            }
             List<Dish> dishes = dataService.FindAllDishes();
             DishMenu = new List<CustomerOrderItemViewModel>();
             int i = 1;
@@ -48,7 +43,6 @@ namespace MyApp
                 CustomerOrderItemViewModel item = new CustomerOrderItemViewModel
                 {
                     Dish = dish,
-                    OnOrderChangedCallback = OnOrderChanged,
                     RowSerialNum = i
                 };
                 DishMenu.Add(item);
@@ -110,6 +104,31 @@ namespace MyApp
             LoadRestaurant();
             LoadDishMenu();
             SubmitCustomerOrderCommand = new RelayCommand(SubmitCustomerOrder, () => CalculateTotalCost() > 0);
+            IsActive = true;
+        }
+
+        protected void RefreshTotalCost()
+        {
+            long money = CalculateTotalCost();
+            long yuan = money / 100;
+            long cents = money % 100;
+            TotalCost = $"{yuan}.{cents:D2}";
+            SubmitCustomerOrderCommand.NotifyCanExecuteChanged();
+        }
+
+        protected override void OnActivated()
+        {
+            static void OnOrderChanged(MainWindowViewModel messageConsumer, CustomerOrderChangedMessage message)
+            {
+                System.Diagnostics.Debug.Print($"调试信息: {message}");
+                messageConsumer.RefreshTotalCost();
+            }
+            Messenger.Register<MainWindowViewModel, CustomerOrderChangedMessage>(this, OnOrderChanged);
+        }
+
+        protected override void OnDeactivated()
+        {
+            Messenger.Unregister<CustomerOrderChangedMessage>(this);
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Windows.Input;
 
 namespace MyApp
 {
-    public class CustomerOrderItemViewModel : ObservableObject
+    public class CustomerOrderItemViewModel : ObservableRecipient
     {
         public Dish Dish { get; set; }
 
@@ -45,11 +46,8 @@ namespace MyApp
                 {
                     return;
                 }
-                if (OnOrderChangedCallback is null)
-                {
-                    return;
-                }
-                OnOrderChangedCallback();
+                string details = $"行号={RowSerialNum} 菜名={Dish.Name} 份数={_numOrdered}";
+                _ = Messenger.Send(new CustomerOrderChangedMessage(details));
             }
         }
 
